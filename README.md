@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/readme/hero.png" alt="always-pnpm - Zero Package Redundancy. 100% Deterministic pnpm Enforcement for Antigravity" width="100%" />
+  <img src="assets/readme/hero.svg" alt="always-pnpm - Zero Package Redundancy. 100% Deterministic pnpm Enforcement for Antigravity" width="100%" />
 </p>
 
 <p align="center">

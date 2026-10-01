@@ -1,3 +1,0 @@
-Asset type: 3D cybernetic package cube for always-pnpm README hero
-Prompt: A sleek futuristic 3D isometric glowing data package cube, cybernetic container floating with glowing neon orange and electric cyan conduits, modular metallic obsidian panels with glowing energy lines, high-tech digital storage icon, dramatic rim lighting, studio product render, centered, perfectly clean solid pure black background #000000, no text, no letters, no logos, no watermark, 8k resolution octane render
-Aspect ratio: 1:1
