@@ -23,12 +23,12 @@ Using standard `npm` wastes gigabytes of disk space due to redundant, duplicated
 
 ### Option 1: One-Line Install (Curl)
 ```bash
-curl -fsSL https://raw.githubusercontent.com/yousufkhan/always-pnpm/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/youxufkhan/always-pnpm/main/scripts/install.sh | bash
 ```
 
 ### Option 2: Clone & Symlink (Recommended for Developers)
 ```bash
-git clone https://github.com/yousufkhan/always-pnpm.git
+git clone https://github.com/youxufkhan/always-pnpm.git
 cd always-pnpm
 ./scripts/install.sh --symlink
 ```
@@ -72,4 +72,4 @@ bash tests/test_installer.sh
 
 ## License
 
-MIT © [Yousuf Khan](https://github.com/yousufkhan)
+MIT © [Yousuf Khan](https://github.com/youxufkhan)
