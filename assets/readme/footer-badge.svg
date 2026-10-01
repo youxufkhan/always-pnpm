@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 36" width="320" height="36">
+  <title>README crafted with beautify-github-readme</title>
+  <defs>
+    <linearGradient id="badgeBorder" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="50%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+    <linearGradient id="badgeBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1120"/>
+      <stop offset="100%" stop-color="#07090e"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="320" height="36" rx="18" fill="url(#badgeBg)" stroke="url(#badgeBorder)" stroke-width="1.2"/>
+  
+  <!-- Sparkle Icon -->
+  <g transform="translate(16, 10)">
+    <path d="M 8 0 L 10 5 L 15 8 L 10 11 L 8 16 L 6 11 L 1 8 L 6 5 Z" fill="#f97316"/>
+  </g>
+
+  <text x="38" y="22.5" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="500">
+    README crafted with <tspan fill="#f8fafc" font-weight="700">beautify-github-readme</tspan>
+  </text>
+</svg>

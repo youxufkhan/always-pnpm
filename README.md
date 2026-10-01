@@ -10,9 +10,9 @@
   <img src="https://img.shields.io/badge/Tests-7%20Passing-10b981.svg?style=flat-square" alt="Tests 7 Passing" />
 </p>
 
----
-
-## Why `always-pnpm`?
+<p align="center">
+  <img src="assets/readme/section-why.svg" alt="Why always-pnpm?" width="100%" />
+</p>
 
 In modern web development, running `npm install` across multiple projects duplicates hundreds of megabytes of identical dependencies in local `node_modules` folders, rapidly consuming tens of gigabytes of disk space.
 
@@ -20,20 +20,15 @@ In modern web development, running `npm install` across multiple projects duplic
 
 However, AI coding agents (such as Antigravity and Antigravity CLI) frequently default to `npm` or `npx` commands. **`always-pnpm`** intercepts commands at the tool lifecycle level, automatically rewriting `npm` and `npx` invocations to `pnpm` in under 3ms with zero agent friction.
 
----
-
-### The Redundancy Difference
-
-| Metric | With Standard `npm` | With `always-pnpm` |
-| :--- | :--- | :--- |
-| **Disk Storage (10 projects)** | ~12.5 GB (Duplicated packages) | **~1.3 GB** (Content-addressable hard links) |
-| **Install Speed** | Re-downloads from registry | **Instant hard-link from global store** |
-| **Agent Behavior** | Uncontrolled `npm` / `npx` execution | **100% Deterministic `pnpm` enforcement** |
-| **Legacy Projects** | Dual lockfile conflicts | **Automated `pnpm import` migration guidance** |
+<p align="center">
+  <img src="assets/readme/comparison.svg" alt="Storage Architecture Comparison: npm vs always-pnpm" width="100%" />
+</p>
 
 ---
 
-## How It Works
+<p align="center">
+  <img src="assets/readme/section-how.svg" alt="How It Works" width="100%" />
+</p>
 
 <p align="center">
   <img src="assets/readme/workflow.svg" alt="always-pnpm Hook Execution Lifecycle" width="100%" />
@@ -46,7 +41,9 @@ However, AI coding agents (such as Antigravity and Antigravity CLI) frequently d
 
 ---
 
-## Quick Installation
+<p align="center">
+  <img src="assets/readme/section-install.svg" alt="Quick Installation" width="100%" />
+</p>
 
 ### Option 1: One-Line Install (Recommended)
 Installs `always-pnpm` globally into `~/.gemini/config/plugins/always-pnpm`:
@@ -70,7 +67,9 @@ Enforces `always-pnpm` strictly inside the current workspace (`.agents/plugins/a
 
 ---
 
-## Command Translation Matrix
+<p align="center">
+  <img src="assets/readme/section-matrix.svg" alt="Command Translation Matrix" width="100%" />
+</p>
 
 The zero-dependency Python engine translates all common `npm` and `npx` commands and flags:
 
@@ -123,6 +122,12 @@ bash tests/test_installer.sh
 ```
 
 ---
+
+<p align="center">
+  <a href="https://github.com/oil-oil/beautify-github-readme">
+    <img src="assets/readme/footer-badge.svg" alt="README crafted with beautify-github-readme" />
+  </a>
+</p>
 
 ## License
 
