@@ -1,0 +1,16 @@
+{
+  "always-pnpm": {
+    "PreToolUse": [
+      {
+        "matcher": "run_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 scripts/rewrite_npm.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

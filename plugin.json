@@ -1,0 +1,6 @@
+{
+  "name": "always-pnpm",
+  "description": "Enforces pnpm exclusively across all Antigravity CLI and agent sessions, automatically rewriting npm and npx commands to pnpm.",
+  "version": "1.0.0",
+  "author": "Antigravity Community"
+}
