@@ -1,13 +1,13 @@
 <p align="center">
-  <img src="assets/readme/hero.svg" alt="always-pnpm - Zero Package Redundancy. 100% Deterministic pnpm Enforcement for Antigravity" width="100%" />
+  <img src="assets/readme/hero.svg" alt="always-pnpm - Zero Package Redundancy. 100% Deterministic pnpm Enforcement for Antigravity, Claude Code, OpenCode, and Codex" width="100%" />
 </p>
 
 <p align="center">
   <a href="https://github.com/youxufkhan/always-pnpm/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" alt="License: MIT" /></a>
-  <a href="https://github.com/youxufkhan/always-pnpm"><img src="https://img.shields.io/badge/Antigravity-Plugin-f97316.svg?style=flat-square" alt="Antigravity Plugin" /></a>
   <a href="https://pnpm.io"><img src="https://img.shields.io/badge/pnpm-100%25%20Enforced-orange.svg?style=flat-square" alt="pnpm Enforced" /></a>
+  <img src="https://img.shields.io/badge/Agents-Antigravity%20%7C%20Claude%20%7C%20OpenCode%20%7C%20Codex-8b5cf6.svg?style=flat-square" alt="Supported Agents" />
   <img src="https://img.shields.io/badge/Python-3.8+-38bdf8.svg?style=flat-square" alt="Python 3.8+" />
-  <img src="https://img.shields.io/badge/Tests-7%20Passing-10b981.svg?style=flat-square" alt="Tests 7 Passing" />
+  <img src="https://img.shields.io/badge/Tests-Passing-10b981.svg?style=flat-square" alt="Tests Passing" />
 </p>
 
 <p align="center">
@@ -18,7 +18,7 @@ In modern web development, running `npm install` across multiple projects duplic
 
 `pnpm` solves this fundamentally by storing packages **once** in a global content-addressable store (`~/.local/share/pnpm/store`) and linking them into projects via filesystem hard links.
 
-However, AI coding agents (such as Antigravity and Antigravity CLI) frequently default to `npm` or `npx` commands. **`always-pnpm`** intercepts commands at the tool lifecycle level, automatically rewriting `npm` and `npx` invocations to `pnpm` in under 3ms with zero agent friction.
+However, AI coding agents (**Antigravity**, **Claude Code**, **OpenCode**, and **Codex**) frequently default to `npm` or `npx` commands. **`always-pnpm`** intercepts commands at the tool lifecycle level, automatically rewriting or redirecting `npm` and `npx` invocations to `pnpm` with zero agent friction.
 
 <p align="center">
   <img src="assets/readme/comparison.svg" alt="Storage Architecture Comparison: npm vs always-pnpm" width="100%" />
@@ -34,10 +34,17 @@ However, AI coding agents (such as Antigravity and Antigravity CLI) frequently d
   <img src="assets/readme/workflow.svg" alt="always-pnpm Hook Execution Lifecycle" width="100%" />
 </p>
 
-1. **Cognitive Alignment (`rules/AGENTS.md`)**: Directs the LLM upfront across all sessions to choose `pnpm`, write `pnpm` documentation, and convert legacy `package-lock.json` files via `pnpm import`.
-2. **Runtime Interception (`hooks.json`)**: Attaches to Antigravity's `PreToolUse` event for `run_command`.
-3. **Smart Shell Tokenization (`scripts/rewrite_npm.py`)**: Uses Python's standard library to parse command tokens and pipeline operators (`&&`, `||`, `;`, `|`), preserving environment variables and ignoring strings in quotes.
-4. **Transparent Overwrite**: Returns an updated `CommandLine` payload executed directly by Antigravity with a notice in the agent feed.
+`always-pnpm` operates on a two-layer defense strategy:
+
+1. **Cognitive Alignment (`AGENTS.md` / `CLAUDE.md`)**: Instructs the model upfront to select `pnpm`, write `pnpm` documentation, and convert legacy `package-lock.json` files via `pnpm import`.
+2. **Runtime Lifecycle Enforcement**: Intercepts terminal commands deterministically according to each agent's native lifecycle model:
+
+| Agent | Enforcement Mechanism | Hook / Plugin Type | Behavior |
+| :--- | :--- | :--- | :--- |
+| **Antigravity** | `PreToolUse` hook on `run_command` | `hooks.json` | Transparent in-place command overwrite |
+| **Claude Code** | `PreToolUse` hook on `Bash` | `settings.json` | Denies `npm` and instructs Claude with exact `pnpm` syntax |
+| **OpenCode** | `tool.execute.before` plugin | `plugins/always-pnpm.js` | Transparent in-place command mutation |
+| **Codex** | `PreToolUse` hook on `bash` | `hooks.json` | Blocks `npm` and instructs agent with exact `pnpm` syntax |
 
 ---
 
@@ -45,22 +52,35 @@ However, AI coding agents (such as Antigravity and Antigravity CLI) frequently d
   <img src="assets/readme/section-install.svg" alt="Quick Installation" width="100%" />
 </p>
 
-### Option 1: One-Line Install (Recommended)
-Installs `always-pnpm` globally into `~/.gemini/config/plugins/always-pnpm`:
+### Option 1: Universal Auto-Detect Install (Recommended)
+Automatically detects which agents are installed on your system and configures all of them:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/youxufkhan/always-pnpm/main/scripts/install.sh | bash
 ```
 
-### Option 2: Clone & Symlink (For Developers / Live Updates)
-Symlinks the repository to your global Antigravity plugins directory so code changes apply immediately:
+### Option 2: Target-Specific Installation
+You can explicitly target one or more agents:
+```bash
+# Target specific agents
+./scripts/install.sh --claude
+./scripts/install.sh --opencode
+./scripts/install.sh --codex
+./scripts/install.sh --antigravity
+
+# Configure all four targets regardless of detection
+./scripts/install.sh --all
+```
+
+### Option 3: Clone & Symlink (For Developers / Live Updates)
+Symlinks the repository so local changes apply immediately across your agent environments:
 ```bash
 git clone https://github.com/youxufkhan/always-pnpm.git
 cd always-pnpm
 ./scripts/install.sh --symlink
 ```
 
-### Option 3: Repository-Specific Only
-Enforces `always-pnpm` strictly inside the current workspace (`.agents/plugins/always-pnpm`):
+### Option 4: Repository-Specific Only (Local Workspace)
+Enforces `always-pnpm` strictly inside the current project (`.claude/`, `.opencode/`, `.codex/`, `.agents/`):
 ```bash
 ./scripts/install.sh --local
 ```
@@ -114,10 +134,10 @@ Commands where `npm` appears only as an argument or in string literals remain un
 Run the comprehensive unit test suite and installer verification:
 
 ```bash
-# Run unit & integration tests
+# Run unit & multi-agent integration tests
 python3 -m unittest discover tests
 
-# Run installer test suite
+# Run multi-agent installer test suite
 bash tests/test_installer.sh
 ```
 
