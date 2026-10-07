@@ -34,3 +34,10 @@ To guarantee consistent pnpm versions across teams:
 }
 ```
 Run `corepack enable` to ensure Node automatically uses the specified pnpm binary.
+
+## Multi-Agent Lifecycle Enforcement
+`always-pnpm` actively guards against accidental `npm` usage across multiple AI coding agents:
+- **Antigravity**: Intercepts `run_command` in `hooks.json` to transparently rewrite `npm` to `pnpm` in-flight.
+- **Claude Code**: Intercepts `Bash` via `PreToolUse` in `.claude/settings.json`, blocking `npm` and instructing the agent with the exact `pnpm` command.
+- **OpenCode**: Modifies commands via the `tool.execute.before` plugin (`always-pnpm.js`).
+- **Codex**: Blocks `npm` in `PreToolUse` hook (`hooks.json`) and guides the model to use `pnpm`.

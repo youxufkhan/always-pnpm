@@ -1,6 +1,6 @@
 {
   "name": "always-pnpm",
-  "description": "Antigravity plugin that transparently rewrites npm and npx commands to pnpm to cut node_modules disk bloat.",
-  "version": "1.0.0",
-  "author": "Antigravity Community"
+  "description": "Deterministic pnpm enforcement for AI coding agents: transparently rewrites or redirects npm and npx commands across Antigravity, Claude Code, OpenCode, and Codex to eliminate node_modules disk bloat.",
+  "version": "1.1.0",
+  "author": "Yousuf Khan"
 }
