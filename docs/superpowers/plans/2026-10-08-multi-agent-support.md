@@ -1,6 +1,6 @@
 # Multi-Agent Support Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Extend `always-pnpm` to natively support Claude Code, OpenCode, and Codex alongside Antigravity, using a centralized Python rewriter engine and agent-specific lifecycle hooks and plugins.
 
@@ -29,7 +29,7 @@
 - CLI Mode: `python3 scripts/rewrite_npm.py --translate "<command>"`: prints rewritten string to stdout. Exit `0` if changed, exit `1` if unchanged.
 - Function: `process_hook_payload(payload: dict) -> dict`: handles Antigravity, Claude Code, and Codex payload structures.
 
-- [ ] **Step 1: Write failing multi-protocol tests in `tests/test_hook_integration.py`**
+- [x] **Step 1: Write failing multi-protocol tests in `tests/test_hook_integration.py`**
 
 ```python
 import os
@@ -138,12 +138,12 @@ if __name__ == "__main__":
     unittest.main()
 ```
 
-- [ ] **Step 2: Run test to verify new tests fail**
+- [x] **Step 2: Run test to verify new tests fail**
 
 Run: `python3 -m unittest tests/test_hook_integration.py`  
 Expected: FAIL on `test_claude_code_block_and_instruct` and CLI translate tests.
 
-- [ ] **Step 3: Update `scripts/rewrite_npm.py` to support CLI mode and Claude/Codex payloads**
+- [x] **Step 3: Update `scripts/rewrite_npm.py` to support CLI mode and Claude/Codex payloads**
 
 Update `scripts/rewrite_npm.py`:
 - Add CLI argument parsing for `--translate` / `-t`.
@@ -228,12 +228,12 @@ def main():
         print(json.dumps({"decision": "allow"}))
 ```
 
-- [ ] **Step 4: Run tests to verify all tests pass**
+- [x] **Step 4: Run tests to verify all tests pass**
 
 Run: `python3 -m unittest discover tests`  
 Expected: All 11 tests pass.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add scripts/rewrite_npm.py tests/test_hook_integration.py
@@ -254,7 +254,7 @@ git commit -m "feat: add multi-protocol payload handling and CLI translation to 
 - CLI: `python3 scripts/config_merger.py claude <settings_json_path> <script_path>`
 - CLI: `python3 scripts/config_merger.py codex <hooks_json_path> <script_path>`
 
-- [ ] **Step 1: Write test for configuration merger**
+- [x] **Step 1: Write test for configuration merger**
 
 Create `tests/test_config_merger.py`:
 ```python
@@ -299,12 +299,12 @@ if __name__ == "__main__":
     unittest.main()
 ```
 
-- [ ] **Step 2: Run test to verify failure**
+- [x] **Step 2: Run test to verify failure**
 
 Run: `python3 -m unittest tests/test_config_merger.py`  
 Expected: ModuleNotFoundError for `scripts.config_merger`.
 
-- [ ] **Step 3: Implement `scripts/config_merger.py`**
+- [x] **Step 3: Implement `scripts/config_merger.py`**
 
 Create `scripts/config_merger.py`:
 ```python
@@ -432,12 +432,12 @@ if __name__ == "__main__":
         sys.exit(1)
 ```
 
-- [ ] **Step 4: Run tests to verify pass**
+- [x] **Step 4: Run tests to verify pass**
 
 Run: `python3 -m unittest tests/test_config_merger.py`  
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add scripts/config_merger.py tests/test_config_merger.py
@@ -457,7 +457,7 @@ git commit -m "feat: add safe configuration merger utility for claude and codex"
 - `plugins/opencode/always-pnpm.js`: exports OpenCode plugin hooking `tool.execute.before`, mutating `output.args.command` when `npm` is detected.
 - `rules/CLAUDE.md`: cognitive guidance matching `rules/AGENTS.md` for Claude Code.
 
-- [ ] **Step 1: Write integration test for OpenCode plugin behavior**
+- [x] **Step 1: Write integration test for OpenCode plugin behavior**
 
 Create `tests/test_opencode_plugin.py` to test the JS plugin syntax and Node invocation:
 ```python
@@ -482,12 +482,12 @@ if __name__ == "__main__":
     unittest.main()
 ```
 
-- [ ] **Step 2: Run test to verify failure**
+- [x] **Step 2: Run test to verify failure**
 
 Run: `python3 -m unittest tests/test_opencode_plugin.py`  
 Expected: FAIL ("Plugin file must exist").
 
-- [ ] **Step 3: Implement `plugins/opencode/always-pnpm.js` and `rules/CLAUDE.md`**
+- [x] **Step 3: Implement `plugins/opencode/always-pnpm.js` and `rules/CLAUDE.md`**
 
 Create `plugins/opencode/always-pnpm.js`:
 ```javascript
@@ -557,12 +557,12 @@ Create `rules/CLAUDE.md` (identical mandate to `rules/AGENTS.md` tailored to Cla
   3. Ensure `pnpm-lock.yaml` is checked into version control.
 ```
 
-- [ ] **Step 4: Run tests to verify pass**
+- [x] **Step 4: Run tests to verify pass**
 
 Run: `python3 -m unittest tests/test_opencode_plugin.py`  
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add plugins/opencode/always-pnpm.js rules/CLAUDE.md tests/test_opencode_plugin.py
@@ -581,7 +581,7 @@ git commit -m "feat: add opencode plugin and claude code rules file"
 - Installer auto-detects installed agents if no explicit agent flag is passed.
 - Flags: `--all`, `--antigravity`, `--claude`, `--opencode`, `--codex`, `--symlink`, `--local`.
 
-- [ ] **Step 1: Write test cases for multi-agent installer**
+- [x] **Step 1: Write test cases for multi-agent installer**
 
 Update `tests/test_installer.sh`:
 - Test auto-detection with mock home directories for Claude, OpenCode, Codex, Antigravity.
@@ -591,11 +591,11 @@ Update `tests/test_installer.sh`:
 - Test `--local` in current workspace creates local `.claude/`, `.opencode/`, `.codex/`, `.agents/`.
 - Test `--all` flag.
 
-- [ ] **Step 2: Run `tests/test_installer.sh` to observe current limitations**
+- [x] **Step 2: Run `tests/test_installer.sh` to observe current limitations**
 
 Run: `bash tests/test_installer.sh`
 
-- [ ] **Step 3: Update `scripts/install.sh` with poly-agent support**
+- [x] **Step 3: Update `scripts/install.sh` with poly-agent support**
 
 Rewrite `scripts/install.sh` to:
 1. Parse flags: `--all`, `--antigravity`, `--claude`, `--opencode`, `--codex`, `--symlink`, `--local`, `--help`.
@@ -606,12 +606,12 @@ Rewrite `scripts/install.sh` to:
 6. For Codex: install `AGENTS.md` to `~/.codex/`, run `config_merger.py codex ~/.codex/hooks.json <script>`.
 7. Handle `--local` by creating local project configs (`.claude/`, `.opencode/`, `.codex/`, `.agents/`).
 
-- [ ] **Step 4: Run full installer tests**
+- [x] **Step 4: Run full installer tests**
 
 Run: `bash tests/test_installer.sh`  
 Expected: All installer tests pass cleanly.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add scripts/install.sh tests/test_installer.sh
@@ -625,7 +625,7 @@ git commit -m "feat: implement universal multi-agent installer with auto-detecti
 **Files:**
 - Modify: `README.md`
 
-- [ ] **Step 1: Update README.md with Multi-Agent Support**
+- [x] **Step 1: Update README.md with Multi-Agent Support**
 
 Add sections for:
 - Supported Agents Matrix: Antigravity, Claude Code, OpenCode, Codex.
@@ -638,7 +638,7 @@ Add sections for:
   - Codex: Block & Instruct via `PreToolUse` on `bash`.
 - Testing commands across all suites.
 
-- [ ] **Step 2: Run all test suites across Python and Bash**
+- [x] **Step 2: Run all test suites across Python and Bash**
 
 Run:
 ```bash
@@ -647,7 +647,7 @@ bash tests/test_installer.sh
 ```
 Expected: All tests pass.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add README.md
