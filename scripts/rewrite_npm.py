@@ -253,33 +253,70 @@ def rewrite_command_line(cmd_line):
 
 def process_hook_payload(payload):
     """
-    Processes the Antigravity PreToolUse hook JSON payload.
+    Processes hook JSON payloads for Antigravity, Claude Code, and Codex.
     """
+    if not isinstance(payload, dict):
+        return {"decision": "allow"}
+
+    # 1. Claude Code payload: {"tool_name": "Bash", "tool_input": {"command": "..."}}
+    if payload.get("tool_name") == "Bash":
+        tool_input = payload.get("tool_input", {})
+        command = tool_input.get("command", "") if isinstance(tool_input, dict) else ""
+        if command and isinstance(command, str):
+            rewritten, changed = rewrite_command_line(command)
+            if changed:
+                return {
+                    "hookSpecificOutput": {
+                        "hookEventName": "PreToolUse",
+                        "permissionDecision": "deny",
+                        "permissionDecisionReason": f"always-pnpm: 'npm' is blocked. Run '{rewritten}' instead."
+                    }
+                }
+        return {"decision": "allow"}
+
+    # 2. Codex payload: {"tool": "bash", "command": "..."}
+    if payload.get("tool") == "bash":
+        command = payload.get("command", "")
+        if command and isinstance(command, str):
+            rewritten, changed = rewrite_command_line(command)
+            if changed:
+                return {
+                    "decision": "deny",
+                    "reason": f"always-pnpm: 'npm' is blocked. Run '{rewritten}' instead."
+                }
+        return {"decision": "allow"}
+
+    # 3. Antigravity payload: {"toolCall": {"name": "run_command", "args": {"CommandLine": "..."}}}
     tool_call = payload.get("toolCall", {})
-    tool_name = tool_call.get("name")
-    args = tool_call.get("args", {})
+    tool_name = tool_call.get("name") if isinstance(tool_call, dict) else None
+    args = tool_call.get("args", {}) if isinstance(tool_call, dict) else {}
 
-    if tool_name != "run_command" or not isinstance(args, dict):
-        return {"decision": "allow"}
-
-    command_line = args.get("CommandLine", "")
-    if not command_line or not isinstance(command_line, str):
-        return {"decision": "allow"}
-
-    rewritten, changed = rewrite_command_line(command_line)
-    if changed:
-        return {
-            "decision": "allow",
-            "reason": f"always-pnpm: rewritten '{command_line}' -> '{rewritten}'",
-            "overwrite": {
-                "CommandLine": rewritten
-            }
-        }
+    if tool_name == "run_command" and isinstance(args, dict):
+        command_line = args.get("CommandLine", "")
+        if command_line and isinstance(command_line, str):
+            rewritten, changed = rewrite_command_line(command_line)
+            if changed:
+                return {
+                    "decision": "allow",
+                    "reason": f"always-pnpm: rewritten '{command_line}' -> '{rewritten}'",
+                    "overwrite": {
+                        "CommandLine": rewritten
+                    }
+                }
 
     return {"decision": "allow"}
 
 
 def main():
+    if len(sys.argv) > 1 and sys.argv[1] in ("--translate", "-t"):
+        if len(sys.argv) > 2:
+            cmd = " ".join(sys.argv[2:])
+        else:
+            cmd = ""
+        rewritten, changed = rewrite_command_line(cmd)
+        print(rewritten)
+        sys.exit(0 if changed else 1)
+
     try:
         raw_input = sys.stdin.read()
         if not raw_input.strip():
