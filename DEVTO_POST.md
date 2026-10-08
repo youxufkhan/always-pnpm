@@ -27,7 +27,7 @@ Standard npm isolates each project by copying every package into the local `node
 
 pnpm writes packages once to a global store at `~/.local/share/pnpm/store`. Projects link to those files using filesystem hard links. Ten projects using the same library version share one physical copy on disk.
 
-![Storage Architecture: npm vs always-pnpm](https://raw.githubusercontent.com/youxufkhan/always-pnpm/main/assets/readme/comparison.svg)
+![Storage Architecture: npm vs always-pnpm](https://raw.githubusercontent.com/youxufkhan/always-pnpm/main/assets/readme/comparison.png)
 
 ## Intercepting terminal commands
 
@@ -35,7 +35,7 @@ I built [always-pnpm](https://github.com/youxufkhan/always-pnpm) to stop fightin
 
 The tool hooks directly into the agent runtime. When Antigravity, Claude Code, OpenCode, or Codex runs a shell command starting with `npm` or `npx`, `always-pnpm` parses the string and rewrites it to `pnpm` in under three milliseconds.
 
-![Deterministic Hook Lifecycle Flow](https://raw.githubusercontent.com/youxufkhan/always-pnpm/main/assets/readme/workflow.svg)
+![Deterministic Hook Lifecycle Flow](https://raw.githubusercontent.com/youxufkhan/always-pnpm/main/assets/readme/workflow.png)
 
 Agent proposal:
 ```bash
