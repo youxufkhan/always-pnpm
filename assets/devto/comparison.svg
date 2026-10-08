@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" width="100%" height="100%">
+  <title>Storage Architecture: npm vs always-pnpm (Dev.to Edition)</title>
+  <defs>
+    <linearGradient id="compBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#070b14"/>
+      <stop offset="60%" stop-color="#0d1527"/>
+      <stop offset="100%" stop-color="#0a1020"/>
+    </linearGradient>
+    <pattern id="compGrid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#1e293b" stroke-width="0.5" stroke-opacity="0.35"/>
+    </pattern>
+    <linearGradient id="barRed" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#dc2626"/>
+    </linearGradient>
+    <linearGradient id="barGreen" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Container Surface -->
+  <rect width="800" height="520" rx="14" fill="url(#compBg)"/>
+  <rect width="800" height="520" rx="14" fill="url(#compGrid)"/>
+  <rect x="1" y="1" width="798" height="518" rx="13" fill="none" stroke="#334155" stroke-width="1.5"/>
+
+  <!-- Top Header (x: 40, y: 32) -->
+  <g transform="translate(40, 32)">
+    <text x="0" y="24" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif" font-size="26" font-weight="800">
+      Disk Space Across 5 Typical Projects
+    </text>
+    <text x="0" y="48" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16">
+      Real disk consumption for 5 apps using React, TypeScript, Vite &amp; Tailwind
+    </text>
+  </g>
+
+  <!-- Card 1: Standard npm (x: 40, y: 105, w: 720, h: 165) -->
+  <g transform="translate(40, 105)">
+    <rect width="720" height="165" rx="10" fill="#181115" stroke="#7f1d1d" stroke-width="1.2"/>
+
+    <g transform="translate(24, 22)">
+      <!-- Label & Total -->
+      <text x="0" y="18" fill="#f87171" font-family="-apple-system, sans-serif" font-size="16" font-weight="700">
+        STANDARD NPM (Isolated node_modules)
+      </text>
+      <text x="540" y="20" fill="#ef4444" font-family="ui-monospace, monospace" font-size="28" font-weight="800">
+        14.8 GB
+      </text>
+
+      <!-- Bar Gauge -->
+      <g transform="translate(0, 38)">
+        <rect width="672" height="28" rx="6" fill="#2d1419"/>
+        <rect width="672" height="28" rx="6" fill="url(#barRed)"/>
+        <text x="14" y="19" fill="#ffffff" font-family="ui-monospace, monospace" font-size="14" font-weight="700">
+          5x duplicates of React, Vite, TS, Tailwind (~3 GB per project)
+        </text>
+      </g>
+
+      <!-- Subtext details -->
+      <g transform="translate(0, 84)">
+        <text x="0" y="14" fill="#cbd5e1" font-family="-apple-system, sans-serif" font-size="15">
+          Each agent project downloads its own independent copy of every dependency.
+        </text>
+        <text x="0" y="34" fill="#f87171" font-family="ui-monospace, monospace" font-size="13" font-weight="600">
+          Result: Rapid disk exhaustion when testing multiple agent experiments.
+        </text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Card 2: always-pnpm (x: 40, y: 290, w: 720, h: 185) -->
+  <g transform="translate(40, 290)">
+    <rect width="720" height="185" rx="10" fill="#091f1a" stroke="#065f46" stroke-width="1.2"/>
+
+    <g transform="translate(24, 22)">
+      <!-- Label & Total -->
+      <text x="0" y="18" fill="#34d399" font-family="-apple-system, sans-serif" font-size="16" font-weight="700">
+        WITH ALWAYS-PNPM (Content-Addressable Hard Links)
+      </text>
+      <text x="540" y="20" fill="#34d399" font-family="ui-monospace, monospace" font-size="28" font-weight="800">
+        1.35 GB
+      </text>
+
+      <!-- Bar Gauge -->
+      <g transform="translate(0, 38)">
+        <rect width="672" height="28" rx="6" fill="#0c2e26"/>
+        <rect width="68" height="28" rx="6" fill="url(#barGreen)"/>
+        <text x="82" y="19" fill="#6ee7b7" font-family="ui-monospace, monospace" font-size="14" font-weight="700">
+          Saved: 13.45 GB (91% less disk space)
+        </text>
+      </g>
+
+      <!-- Subtext details -->
+      <g transform="translate(0, 84)">
+        <text x="0" y="14" fill="#cbd5e1" font-family="-apple-system, sans-serif" font-size="15">
+          Packages are written once to <tspan fill="#f97316" font-family="ui-monospace, monospace">~/.local/share/pnpm/store</tspan>.
+        </text>
+        <text x="0" y="36" fill="#34d399" font-family="-apple-system, sans-serif" font-size="14" font-weight="700">
+          ✓ All 5 workspaces reference the same physical blocks via filesystem hard links.
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>

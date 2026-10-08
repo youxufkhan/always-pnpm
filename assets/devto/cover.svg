@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 420" width="100%" height="100%">
+  <title>always-pnpm: Stop AI Agents From Filling Your SSD</title>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080c14"/>
+      <stop offset="60%" stop-color="#0e172a"/>
+      <stop offset="100%" stop-color="#0a101f"/>
+    </linearGradient>
+    <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
+      <path d="M 28 0 L 0 0 0 28" fill="none" stroke="#1e293b" stroke-width="0.6" stroke-opacity="0.4"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="420" rx="14" fill="url(#bg)"/>
+  <rect width="1000" height="420" rx="14" fill="url(#grid)"/>
+  <rect x="1" y="1" width="998" height="418" rx="13" fill="none" stroke="#334155" stroke-width="1.5"/>
+
+  <!-- Left Side: Huge, Legible Headline (x: 50, y: 55) -->
+  <g transform="translate(50, 50)">
+    <!-- Pill -->
+    <g transform="translate(0, 0)">
+      <rect width="140" height="30" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+      <text x="14" y="20" fill="#f97316" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="800" letter-spacing="0.08em">ALWAYS-PNPM</text>
+    </g>
+
+    <!-- Main Title -->
+    <text x="0" y="82" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif" font-size="42" font-weight="900" letter-spacing="-0.03em">
+      Stop AI Agents
+    </text>
+    <text x="0" y="132" fill="#f97316" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif" font-size="42" font-weight="900" letter-spacing="-0.03em">
+      From Filling Your Disk
+    </text>
+    <text x="0" y="182" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif" font-size="42" font-weight="900" letter-spacing="-0.03em">
+      With npm
+    </text>
+
+    <!-- Subtitle -->
+    <text x="0" y="230" fill="#cbd5e1" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="18" font-weight="500">
+      Rewrites agent tool calls to pnpm in &lt;3ms.
+    </text>
+    <text x="0" y="258" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16">
+      Shared global store. 0 duplicate packages.
+    </text>
+
+    <!-- Supported Agents -->
+    <g transform="translate(0, 298)">
+      <rect width="360" height="32" rx="6" fill="#0f172a" stroke="#1e293b" stroke-width="1"/>
+      <text x="16" y="21" fill="#94a3b8" font-family="ui-monospace, monospace" font-size="13" font-weight="600">
+        Claude • Antigravity • OpenCode • Codex
+      </text>
+    </g>
+  </g>
+
+  <!-- Right Side: High-Contrast Terminal Card (x: 480, y: 50, w: 470, h: 320) -->
+  <g transform="translate(480, 50)">
+    <!-- Window Body -->
+    <rect width="470" height="320" rx="12" fill="#0b1120" stroke="#334155" stroke-width="1.5"/>
+
+    <!-- Window Top Header -->
+    <rect width="470" height="42" rx="12" fill="#131c31"/>
+    <rect y="30" width="470" height="12" fill="#131c31"/>
+    <circle cx="22" cy="21" r="5" fill="#ef4444"/>
+    <circle cx="38" cy="21" r="5" fill="#f59e0b"/>
+    <circle cx="54" cy="21" r="5" fill="#10b981"/>
+    <text x="76" y="26" fill="#94a3b8" font-family="ui-monospace, monospace" font-size="14" font-weight="600">terminal :: hook interception</text>
+    <line x1="0" y1="42" x2="470" y2="42" stroke="#1e293b" stroke-width="1"/>
+
+    <!-- Terminal Content -->
+    <g transform="translate(24, 66)">
+      <!-- Line 1: Agent intent -->
+      <text x="0" y="18" fill="#94a3b8" font-family="ui-monospace, monospace" font-size="14" font-weight="600">agent tries:</text>
+      <g transform="translate(0, 28)">
+        <rect width="422" height="36" rx="6" fill="#1a1115" stroke="#ef4444" stroke-opacity="0.4"/>
+        <text x="14" y="23" fill="#f87171" font-family="ui-monospace, monospace" font-size="16" font-weight="600" text-decoration="line-through">$ npm install express lodash</text>
+      </g>
+
+      <!-- Line 2: Rewritten execution -->
+      <g transform="translate(0, 80)">
+        <text x="0" y="18" fill="#38bdf8" font-family="ui-monospace, monospace" font-size="14" font-weight="700">always-pnpm executes:</text>
+        <g transform="translate(0, 28)">
+          <rect width="422" height="38" rx="6" fill="#082236" stroke="#0284c7" stroke-width="1.2"/>
+          <text x="14" y="24" fill="#38bdf8" font-family="ui-monospace, monospace" font-size="16" font-weight="700">$ pnpm add express lodash</text>
+        </g>
+      </g>
+
+      <!-- Result Banner -->
+      <g transform="translate(0, 164)">
+        <rect width="422" height="52" rx="8" fill="#062822" stroke="#059669" stroke-width="1.2"/>
+        <text x="16" y="24" fill="#34d399" font-family="-apple-system, sans-serif" font-size="15" font-weight="700">
+          ✓ Stored once in ~/.local/share/pnpm/store
+        </text>
+        <text x="16" y="42" fill="#6ee7b7" font-family="-apple-system, sans-serif" font-size="13">
+          Projects use OS hard links. 91% disk space saved.
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>

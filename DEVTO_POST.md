@@ -3,7 +3,7 @@ title: Stop Letting AI Agents Fill Your SSD With npm
 published: true
 description: AI coding agents love npm install. Here is how always-pnpm catches agent tool calls and rewrites them to pnpm before execution.
 tags: javascript, webdev, ai, programming
-cover_image: https://raw.githubusercontent.com/youxufkhan/always-pnpm/main/assets/devto-cover.png
+cover_image: https://raw.githubusercontent.com/youxufkhan/always-pnpm/main/assets/devto/cover.png
 canonical_url: https://github.com/youxufkhan/always-pnpm
 ---
 
@@ -13,7 +13,7 @@ Thirty minutes in, my laptop showed a low disk space alert.
 
 The agent had downloaded three separate copies of React, Vite, TypeScript, and ESLint. Each project had its own 600 MB `node_modules` directory. If you run multiple subagents or test throwaway ideas during the week, you lose dozens of gigabytes to duplicate JavaScript packages.
 
-![always-pnpm Dev.to Banner](https://raw.githubusercontent.com/youxufkhan/always-pnpm/main/assets/devto-cover.png)
+![always-pnpm Dev.to Banner](https://raw.githubusercontent.com/youxufkhan/always-pnpm/main/assets/devto/cover.png)
 
 ## The default to npm
 
@@ -27,7 +27,7 @@ Standard npm isolates each project by copying every package into the local `node
 
 pnpm writes packages once to a global store at `~/.local/share/pnpm/store`. Projects link to those files using filesystem hard links. Ten projects using the same library version share one physical copy on disk.
 
-![Storage Architecture: npm vs always-pnpm](https://raw.githubusercontent.com/youxufkhan/always-pnpm/main/assets/readme/comparison.png)
+![Storage Architecture: npm vs always-pnpm](https://raw.githubusercontent.com/youxufkhan/always-pnpm/main/assets/devto/comparison.png)
 
 ## Intercepting terminal commands
 
@@ -35,7 +35,7 @@ I built [always-pnpm](https://github.com/youxufkhan/always-pnpm) to stop fightin
 
 The tool hooks directly into the agent runtime. When Antigravity, Claude Code, OpenCode, or Codex runs a shell command starting with `npm` or `npx`, `always-pnpm` parses the string and rewrites it to `pnpm` in under three milliseconds.
 
-![Deterministic Hook Lifecycle Flow](https://raw.githubusercontent.com/youxufkhan/always-pnpm/main/assets/readme/workflow.png)
+![Deterministic Hook Lifecycle Flow](https://raw.githubusercontent.com/youxufkhan/always-pnpm/main/assets/devto/workflow.png)
 
 Agent proposal:
 ```bash

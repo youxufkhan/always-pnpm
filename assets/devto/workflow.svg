@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 540" width="100%" height="100%">
+  <title>Hook Lifecycle Execution: always-pnpm (Dev.to Edition)</title>
+  <defs>
+    <linearGradient id="wfBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#070b14"/>
+      <stop offset="60%" stop-color="#0d1527"/>
+      <stop offset="100%" stop-color="#0a1020"/>
+    </linearGradient>
+    <pattern id="wfGrid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#1e293b" stroke-width="0.5" stroke-opacity="0.35"/>
+    </pattern>
+  </defs>
+
+  <!-- Canvas Surface -->
+  <rect width="800" height="540" rx="14" fill="url(#wfBg)"/>
+  <rect width="800" height="540" rx="14" fill="url(#wfGrid)"/>
+  <rect x="1" y="1" width="798" height="538" rx="13" fill="none" stroke="#334155" stroke-width="1.5"/>
+
+  <!-- Top Header -->
+  <g transform="translate(40, 30)">
+    <text x="0" y="24" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif" font-size="26" font-weight="800">
+      Deterministic Hook Execution Lifecycle
+    </text>
+    <text x="0" y="48" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16">
+      How always-pnpm intercepts agent tool calls before the shell runs
+    </text>
+  </g>
+
+  <!-- Step 1 Card: Agent Intent (x: 40, y: 95, w: 720, h: 95) -->
+  <g transform="translate(40, 95)">
+    <rect width="720" height="95" rx="8" fill="#181115" stroke="#7f1d1d" stroke-width="1.2"/>
+    <rect x="16" y="14" width="80" height="22" rx="4" fill="#2d1217"/>
+    <text x="24" y="29" fill="#fca5a5" font-family="ui-monospace, monospace" font-size="11" font-weight="700">STAGE 1</text>
+    <text x="108" y="30" fill="#f87171" font-family="-apple-system, sans-serif" font-size="15" font-weight="700">Agent Proposal (Antigravity / Claude / OpenCode / Codex)</text>
+    
+    <g transform="translate(16, 44)">
+      <rect width="688" height="36" rx="4" fill="#0d080a" stroke="#2e161c"/>
+      <text x="14" y="23" fill="#f87171" font-family="ui-monospace, monospace" font-size="15" font-weight="600" text-decoration="line-through">$ npm install express lodash</text>
+      <text x="460" y="23" fill="#fca5a5" font-family="ui-monospace, monospace" font-size="12">⚠️ Duplicates dependencies</text>
+    </g>
+  </g>
+
+  <!-- Connector Arrow 1 -->
+  <g transform="translate(400, 202)">
+    <line x1="0" y1="0" x2="0" y2="24" stroke="#f97316" stroke-width="2" stroke-dasharray="4 3"/>
+    <polygon points="-5,24 5,24 0,31" fill="#f97316"/>
+    <rect x="-135" y="4" width="270" height="20" rx="4" fill="#1e1814" stroke="#f97316" stroke-width="0.8"/>
+    <text x="0" y="18" fill="#fb923c" font-family="ui-monospace, monospace" font-size="11.5" font-weight="700" text-anchor="middle">⚡ PreToolUse Hook Intercept (&lt;3ms)</text>
+  </g>
+
+  <!-- Step 2 Card: Hook Rewrite (x: 40, y: 242, w: 720, h: 95) -->
+  <g transform="translate(40, 242)">
+    <rect width="720" height="95" rx="8" fill="#081e30" stroke="#0284c7" stroke-width="1.2"/>
+    <rect x="16" y="14" width="80" height="22" rx="4" fill="#0c2f4a"/>
+    <text x="24" y="29" fill="#7dd3fc" font-family="ui-monospace, monospace" font-size="11" font-weight="700">STAGE 2</text>
+    <text x="108" y="30" fill="#38bdf8" font-family="-apple-system, sans-serif" font-size="15" font-weight="700">Zero-Dependency Python Parser Rewrites In Place</text>
+    
+    <g transform="translate(16, 44)">
+      <rect width="688" height="36" rx="4" fill="#04121e" stroke="#0369a1"/>
+      <text x="14" y="23" fill="#38bdf8" font-family="ui-monospace, monospace" font-size="16" font-weight="700">$ pnpm add express lodash</text>
+      <text x="460" y="23" fill="#34d399" font-family="ui-monospace, monospace" font-size="12" font-weight="700">✓ Transparent execution</text>
+    </g>
+  </g>
+
+  <!-- Connector Arrow 2 -->
+  <g transform="translate(400, 349)">
+    <line x1="0" y1="0" x2="0" y2="24" stroke="#10b981" stroke-width="2" stroke-dasharray="4 3"/>
+    <polygon points="-5,24 5,24 0,31" fill="#10b981"/>
+    <rect x="-120" y="4" width="240" height="20" rx="4" fill="#0a1f18" stroke="#10b981" stroke-width="0.8"/>
+    <text x="0" y="18" fill="#6ee7b7" font-family="ui-monospace, monospace" font-size="11.5" font-weight="700" text-anchor="middle">✓ Linked via OS Hard Links</text>
+  </g>
+
+  <!-- Step 3 Card: Central Deduplicated Store (x: 40, y: 389, w: 720, h: 105) -->
+  <g transform="translate(40, 389)">
+    <rect width="720" height="105" rx="8" fill="#091f1a" stroke="#059669" stroke-width="1.2"/>
+    <rect x="16" y="14" width="80" height="22" rx="4" fill="#0b382c"/>
+    <text x="24" y="29" fill="#6ee7b7" font-family="ui-monospace, monospace" font-size="11" font-weight="700">STAGE 3</text>
+    <text x="108" y="30" fill="#34d399" font-family="-apple-system, sans-serif" font-size="15" font-weight="700">Global Content-Addressable Storage</text>
+
+    <g transform="translate(16, 44)">
+      <rect width="688" height="46" rx="4" fill="#041410" stroke="#047857"/>
+      <text x="14" y="22" fill="#34d399" font-family="ui-monospace, monospace" font-size="15" font-weight="700">~/.local/share/pnpm/store</text>
+      <text x="14" y="38" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="12">Packages stored once globally. All agent workspaces share the same physical files on disk.</text>
+      <text x="560" y="29" fill="#10b981" font-family="ui-monospace, monospace" font-size="14" font-weight="800">91% DISK SAVED</text>
+    </g>
+  </g>
+</svg>
