@@ -1,122 +1,49 @@
 #!/usr/bin/env python3
 """
-Safely merges always-pnpm hooks into existing Claude Code and Codex configurations.
+Merges the always-pnpm PreToolUse hook into a Claude Code settings.json or Codex hooks.json
+(both use the same {"hooks": {"PreToolUse": [...]}} format).
 """
 
 import os
+import shlex
 import sys
 import json
 
 
-def load_json_safe(path):
-    if not os.path.exists(path):
-        return {}
-    try:
-        with open(path, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except Exception:
-        return {}
+def merge_hook(path, script_path):
+    data = {}
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)  # bad JSON raises: never overwrite a config we can't read
 
+    # Older installs wrote Codex hooks at the top level; drop our stale entries there.
+    legacy = data.get("PreToolUse")
+    if isinstance(legacy, list):
+        legacy[:] = [item for item in legacy if "rewrite_npm.py" not in json.dumps(item)]
+        if not legacy:
+            del data["PreToolUse"]
 
-def save_json(path, data):
+    # setdefault raises on unexpected types instead of silently replacing user config
+    pre_hooks = data.setdefault("hooks", {}).setdefault("PreToolUse", [])
+    command = f"python3 {shlex.quote(script_path)}"
+    ours = [h for item in pre_hooks if isinstance(item, dict) and isinstance(item.get("hooks"), list)
+            for h in item["hooks"] if isinstance(h, dict) and "rewrite_npm.py" in str(h.get("command", ""))]
+    for h in ours:
+        h["command"] = command
+    if not ours:
+        pre_hooks.append({"matcher": "Bash", "hooks": [{"type": "command", "command": command, "timeout": 10}]})
+
     os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
         f.write("\n")
-
-
-def merge_claude_settings(settings_path, script_path):
-    data = load_json_safe(settings_path)
-    if "hooks" not in data or not isinstance(data["hooks"], dict):
-        data["hooks"] = {}
-
-    hooks_dict = data["hooks"]
-    if "PreToolUse" not in hooks_dict or not isinstance(hooks_dict["PreToolUse"], list):
-        hooks_dict["PreToolUse"] = []
-
-    pre_hooks = hooks_dict["PreToolUse"]
-    # Check if always-pnpm matcher already present
-    existing = False
-    for item in pre_hooks:
-        if isinstance(item, dict) and item.get("matcher") == "Bash":
-            for h in item.get("hooks", []):
-                if "rewrite_npm.py" in h.get("command", ""):
-                    h["command"] = f"python3 {script_path}"
-                    existing = True
-            if not existing:
-                item.setdefault("hooks", []).append({
-                    "type": "command",
-                    "command": f"python3 {script_path}",
-                    "timeout": 10
-                })
-                existing = True
-
-    if not existing:
-        pre_hooks.append({
-            "matcher": "Bash",
-            "hooks": [
-                {
-                    "type": "command",
-                    "command": f"python3 {script_path}",
-                    "timeout": 10
-                }
-            ]
-        })
-
-    save_json(settings_path, data)
-    return data
-
-
-def merge_codex_hooks(hooks_path, script_path):
-    data = load_json_safe(hooks_path)
-    if "PreToolUse" not in data or not isinstance(data["PreToolUse"], list):
-        data["PreToolUse"] = []
-
-    pre_hooks = data["PreToolUse"]
-    existing = False
-    for item in pre_hooks:
-        if isinstance(item, dict) and item.get("matcher") == "bash":
-            for h in item.get("hooks", []):
-                if "rewrite_npm.py" in h.get("command", ""):
-                    h["command"] = f"python3 {script_path}"
-                    existing = True
-            if not existing:
-                item.setdefault("hooks", []).append({
-                    "type": "command",
-                    "command": f"python3 {script_path}",
-                    "timeout": 10
-                })
-                existing = True
-
-    if not existing:
-        pre_hooks.append({
-            "matcher": "bash",
-            "hooks": [
-                {
-                    "type": "command",
-                    "command": f"python3 {script_path}",
-                    "timeout": 10
-                }
-            ]
-        })
-
-    save_json(hooks_path, data)
     return data
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 4:
-        print("Usage: config_merger.py <claude|codex> <config_file> <script_path>")
-        sys.exit(1)
-
-    target_type = sys.argv[1].lower()
-    conf_file = sys.argv[2]
-    script = os.path.abspath(sys.argv[3])
-
-    if target_type == "claude":
-        merge_claude_settings(conf_file, script)
-    elif target_type == "codex":
-        merge_codex_hooks(conf_file, script)
-    else:
-        print(f"Unknown target: {target_type}")
-        sys.exit(1)
+    if len(sys.argv) != 3:
+        sys.exit("Usage: config_merger.py <config_file> <script_path>")
+    try:
+        merge_hook(sys.argv[1], os.path.abspath(sys.argv[2]))
+    except (ValueError, AttributeError) as e:
+        sys.exit(f"always-pnpm: can't update {sys.argv[1]} ({e}). Fix the file and re-run install.sh.")

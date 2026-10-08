@@ -44,7 +44,7 @@ class TestRewriteNpm(unittest.TestCase):
             ("npm explain chalk", "pnpm why chalk"),
             ("npm outdated", "pnpm outdated"),
             ("npm audit", "pnpm audit"),
-            ("npm audit fix", "pnpm audit"),
+            ("npm audit fix", "pnpm audit --fix"),
             ("npm cache clean --force", "pnpm store prune"),
             ("npm link", "pnpm link"),
             ("npm unlink", "pnpm unlink"),
@@ -83,6 +83,25 @@ class TestRewriteNpm(unittest.TestCase):
         rewritten3, changed3 = rewrite_command_line(original3)
         self.assertTrue(changed3)
         self.assertEqual(rewritten3, expected3)
+
+    def test_rest_of_command_preserved_verbatim(self):
+        cases = [
+            ("npm test 2>&1 | tee log", "pnpm test 2>&1 | tee log"),
+            ("npm run build > out.log", "pnpm run build > out.log"),
+            ("npm start &>log", "pnpm start &>log"),
+            ('npm i foo && echo "a   b"', 'pnpm add foo && echo "a   b"'),
+            ("npm install --prefix $HOME/app", "pnpm install --prefix $HOME/app"),
+            ("npm i --prefix ./x lodash", "pnpm add --prefix ./x lodash"),
+            ("cd app\nnpm i foo", "cd app\npnpm add foo"),
+            ("npm install\nnpm test", "pnpm install\npnpm test"),
+            ("FOO=a\\ b npm i x", "FOO=a\\ b pnpm add x"),
+            ("npx eslint src/*.js", "pnpm dlx eslint src/*.js"),
+            ('FOO="a b" npm ci', 'FOO="a b" pnpm install --frozen-lockfile'),
+            ("npm run dev & npm test", "pnpm run dev & pnpm test"),
+        ]
+        for original, expected in cases:
+            with self.subTest(cmd=original):
+                self.assertEqual(rewrite_command_line(original), (expected, True))
 
     def test_negative_cases_no_rewrite(self):
         negatives = [

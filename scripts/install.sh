@@ -15,35 +15,15 @@ EXPLICIT_TARGET=false
 
 for arg in "$@"; do
   case "$arg" in
-    --symlink)
-      INSTALL_MODE="symlink"
-      ;;
-    --local)
-      INSTALL_MODE="local"
-      ;;
-    --antigravity)
-      TARGET_ANTIGRAVITY=true
-      EXPLICIT_TARGET=true
-      ;;
-    --claude)
-      TARGET_CLAUDE=true
-      EXPLICIT_TARGET=true
-      ;;
-    --opencode)
-      TARGET_OPENCODE=true
-      EXPLICIT_TARGET=true
-      ;;
-    --codex)
-      TARGET_CODEX=true
-      EXPLICIT_TARGET=true
-      ;;
+    --symlink) INSTALL_MODE="symlink" ;;
+    --local) INSTALL_MODE="local" ;;
+    --antigravity) TARGET_ANTIGRAVITY=true; EXPLICIT_TARGET=true ;;
+    --claude) TARGET_CLAUDE=true; EXPLICIT_TARGET=true ;;
+    --opencode) TARGET_OPENCODE=true; EXPLICIT_TARGET=true ;;
+    --codex) TARGET_CODEX=true; EXPLICIT_TARGET=true ;;
     --all)
-      TARGET_ANTIGRAVITY=true
-      TARGET_CLAUDE=true
-      TARGET_OPENCODE=true
-      TARGET_CODEX=true
-      EXPLICIT_TARGET=true
-      ;;
+      TARGET_ANTIGRAVITY=true; TARGET_CLAUDE=true; TARGET_OPENCODE=true; TARGET_CODEX=true
+      EXPLICIT_TARGET=true ;;
     --help|-h)
       echo "always-pnpm - Universal Multi-Agent Installer"
       echo "Usage: ./install.sh [TARGETS] [OPTIONS]"
@@ -120,10 +100,17 @@ else
   CANONICAL_DIR="${HOME}/.local/share/always-pnpm/scripts"
   mkdir -p "$CANONICAL_DIR"
   cp -f "$SCRIPT_DIR/scripts/rewrite_npm.py" "$CANONICAL_DIR/"
-  cp -f "$SCRIPT_DIR/scripts/config_merger.py" "$CANONICAL_DIR/"
   chmod +x "$CANONICAL_DIR/rewrite_npm.py"
   CANONICAL_SCRIPT="$CANONICAL_DIR/rewrite_npm.py"
 fi
+
+# Append rules to the user's instruction file once, never clobber it.
+# ponytail: re-install won't refresh an already-appended block; edit it by hand if rules change.
+add_rules() {
+  grep -qsF "Mandatory pnpm Usage" "$1" && return
+  [ -s "$1" ] && echo >> "$1"
+  cat "$SCRIPT_DIR/rules/AGENTS.md" >> "$1"
+}
 
 # 1. Antigravity Installation
 if [ "$TARGET_ANTIGRAVITY" = true ]; then
@@ -159,11 +146,11 @@ if [ "$TARGET_CLAUDE" = true ]; then
     CLAUDE_DIR="${HOME}/.claude"
   fi
   mkdir -p "$CLAUDE_DIR"
-  cp -f "$SCRIPT_DIR/rules/CLAUDE.md" "$CLAUDE_DIR/CLAUDE.md"
   
   # Safe settings merge
   SETTINGS_FILE="$CLAUDE_DIR/settings.json"
-  python3 "$SCRIPT_DIR/scripts/config_merger.py" claude "$SETTINGS_FILE" "$CANONICAL_SCRIPT"
+  python3 "$SCRIPT_DIR/scripts/config_merger.py" "$SETTINGS_FILE" "$CANONICAL_SCRIPT"
+  add_rules "$CLAUDE_DIR/CLAUDE.md"
   echo "  ✓ Claude Code configured at $CLAUDE_DIR"
 fi
 
@@ -176,8 +163,9 @@ if [ "$TARGET_OPENCODE" = true ]; then
     OPEN_DIR="${HOME}/.config/opencode"
   fi
   mkdir -p "$OPEN_DIR/plugins" "$OPEN_DIR/skills/always-pnpm"
-  cp -f "$SCRIPT_DIR/plugins/opencode/always-pnpm.js" "$OPEN_DIR/plugins/always-pnpm.js"
-  cp -f "$SCRIPT_DIR/rules/AGENTS.md" "$OPEN_DIR/AGENTS.md"
+  python3 -c 'import json, sys; src, dst, path = sys.argv[1:]; open(dst, "w").write(open(src).read().replace("\"__ALWAYS_PNPM_SCRIPT__\"", json.dumps(path)))' \
+    "$SCRIPT_DIR/plugins/opencode/always-pnpm.js" "$OPEN_DIR/plugins/always-pnpm.js" "$CANONICAL_SCRIPT"
+  add_rules "$OPEN_DIR/AGENTS.md"
   cp -f "$SCRIPT_DIR/skills/always-pnpm/SKILL.md" "$OPEN_DIR/skills/always-pnpm/"
   echo "  ✓ OpenCode configured at $OPEN_DIR"
 fi
@@ -191,11 +179,11 @@ if [ "$TARGET_CODEX" = true ]; then
     CODEX_DIR="${HOME}/.codex"
   fi
   mkdir -p "$CODEX_DIR"
-  cp -f "$SCRIPT_DIR/rules/AGENTS.md" "$CODEX_DIR/AGENTS.md"
 
   # Safe hooks merge
   HOOKS_FILE="$CODEX_DIR/hooks.json"
-  python3 "$SCRIPT_DIR/scripts/config_merger.py" codex "$HOOKS_FILE" "$CANONICAL_SCRIPT"
+  python3 "$SCRIPT_DIR/scripts/config_merger.py" "$HOOKS_FILE" "$CANONICAL_SCRIPT"
+  add_rules "$CODEX_DIR/AGENTS.md"
   echo "  ✓ Codex configured at $CODEX_DIR"
 fi
 

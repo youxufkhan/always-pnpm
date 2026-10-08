@@ -1,9 +1,10 @@
 import { execFileSync } from "node:child_process";
-import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const REWRITER_PATH = process.env.ALWAYS_PNPM_SCRIPT || path.resolve(__dirname, "../../scripts/rewrite_npm.py");
+// install.sh substitutes the installed rewrite_npm.py path; unsubstituted means we're running from the repo.
+const INSTALLED = "__ALWAYS_PNPM_SCRIPT__";
+const REWRITER_PATH = process.env.ALWAYS_PNPM_SCRIPT ||
+  (INSTALLED.startsWith("__") ? fileURLToPath(new URL("../../scripts/rewrite_npm.py", import.meta.url)) : INSTALLED);
 
 export const AlwaysPnpmPlugin = async () => {
   return {
@@ -25,7 +26,8 @@ export const AlwaysPnpmPlugin = async () => {
             output.args.command = rewritten;
           }
         } catch (err) {
-          // If exit code is 1 (no changes) or process error, fail open safely
+          // Exit 1 = nothing to rewrite. Anything else: fail open, but say so.
+          if (err.status !== 1) console.error(`always-pnpm: rewriter failed (${REWRITER_PATH}): ${err.message}`);
         }
       }
     },

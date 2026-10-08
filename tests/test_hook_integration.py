@@ -67,24 +67,7 @@ class TestHookIntegration(unittest.TestCase):
             capture_output=True,
             check=True
         )
-        data = json.loads(proc.stdout)
-        self.assertEqual(data.get("decision"), "allow")
-
-    def test_codex_block_and_instruct(self):
-        payload = {
-            "tool": "bash",
-            "command": "npm install lodash"
-        }
-        proc = subprocess.run(
-            [sys.executable, self.script_path],
-            input=json.dumps(payload),
-            text=True,
-            capture_output=True,
-            check=True
-        )
-        data = json.loads(proc.stdout)
-        self.assertEqual(data["decision"], "deny")
-        self.assertIn("pnpm add lodash", data["reason"])
+        self.assertEqual(proc.stdout, "")
 
     def test_cli_translate_flag_changed(self):
         proc = subprocess.run(

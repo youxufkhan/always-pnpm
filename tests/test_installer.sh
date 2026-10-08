@@ -28,7 +28,12 @@ echo "--- Test 2: Claude Code Target ---"
 HOME_CLAUDE="$TEST_TMP/home_claude"
 mkdir -p "$HOME_CLAUDE/.claude"
 echo '{"theme": "dark", "fontSize": 14}' > "$HOME_CLAUDE/.claude/settings.json"
+echo "# my personal rules" > "$HOME_CLAUDE/.claude/CLAUDE.md"
 HOME="$HOME_CLAUDE" "$SCRIPT_DIR/scripts/install.sh" --claude
+HOME="$HOME_CLAUDE" "$SCRIPT_DIR/scripts/install.sh" --claude
+grep -q "my personal rules" "$HOME_CLAUDE/.claude/CLAUDE.md" || { echo "FAIL: CLAUDE.md clobbered"; exit 1; }
+[ "$(grep -c "Mandatory pnpm Usage" "$HOME_CLAUDE/.claude/CLAUDE.md")" = 1 ] || { echo "FAIL: rules appended twice"; exit 1; }
+[ "$(grep -c rewrite_npm.py "$HOME_CLAUDE/.claude/settings.json")" = 1 ] || { echo "FAIL: hook duplicated"; exit 1; }
 
 if [ -f "$HOME_CLAUDE/.claude/CLAUDE.md" ] && grep -q "theme" "$HOME_CLAUDE/.claude/settings.json" && grep -q "rewrite_npm.py" "$HOME_CLAUDE/.claude/settings.json"; then
   echo "PASS: Claude Code installation and settings merge valid"
@@ -42,6 +47,7 @@ echo "--- Test 3: OpenCode Target ---"
 HOME_OPEN="$TEST_TMP/home_open"
 mkdir -p "$HOME_OPEN"
 HOME="$HOME_OPEN" "$SCRIPT_DIR/scripts/install.sh" --opencode
+grep -qF "$HOME_OPEN/.local/share/always-pnpm/scripts/rewrite_npm.py" "$HOME_OPEN/.config/opencode/plugins/always-pnpm.js" || { echo "FAIL: OpenCode rewriter path not substituted"; exit 1; }
 
 if [ -f "$HOME_OPEN/.config/opencode/plugins/always-pnpm.js" ] && [ -f "$HOME_OPEN/.config/opencode/AGENTS.md" ] && [ -f "$HOME_OPEN/.config/opencode/skills/always-pnpm/SKILL.md" ]; then
   echo "PASS: OpenCode installation valid"
